@@ -1,5 +1,6 @@
 <template>
   <main>
+    <SelectAreaComponent/>
     <div class="card-container">
         <div class="card" v-for="album in albums" :key="album.title">
             <div>
@@ -15,11 +16,15 @@
 </template>
 
 <script>
+    import SelectAreaComponent from './SelectAreaComponent.vue'
 
 export default {
     name: 'MainComponent',
     props: {
        albums: Array,
+    }, 
+    components: {
+        SelectAreaComponent
     }
 }
 </script>
@@ -28,7 +33,6 @@ export default {
     main{
         background-color: #1e2d3b;
         color: white;
-        height: 673px;
     }
 
     .card-container{
@@ -40,8 +44,8 @@ export default {
         width: 1000px;
         text-align: center;
         height: 100%;
-        padding-top: 50px;
-        padding-bottom: 50px;
+        padding-top: 30px;
+        padding-bottom: 30px;
         
         
     
@@ -74,6 +78,7 @@ export default {
 
         .year{
             font-size: 0.8rem;
+            padding-bottom: 10px;
         }
     
     }
