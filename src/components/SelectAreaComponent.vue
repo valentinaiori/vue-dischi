@@ -1,6 +1,6 @@
 <template>
     <div class="select">
-        <select name="select-area">
+        <select name="select-area" v-model="genres" @change="changeGenres">
             <option value="All">All</option>
             <option value="Jazz">Jazz</option>
             <option value="Metal">Metal</option>
@@ -13,7 +13,17 @@
 
 <script>
 export default {
-    name: 'SelectAreaComponent'
+    name: 'SelectAreaComponent', 
+    data(){
+        return {
+            genres: '',
+        }
+    },
+    methods: {
+        changeGenres(){
+            console.log(this.genres);
+        }
+    }
 }
 </script>
 
