@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HeaderComponent/>
-    <MainComponent :disks ="disks"/>
+    <MainComponent :albums ="albums"/>
     
   </div>
 </template>
@@ -15,17 +15,29 @@ export default {
   name: 'App',
   data(){
     return {
-      disks: [],
+      apiUrl: 'https://flynn.boolean.careers/exercises/api/array/music',
+      albums: []
     }
   },
 
   created(){
-    axios.get('https://flynn.boolean.careers/exercises/api/array/music').then(({status, data}) =>{
-      if(status === 200){
-        this.disks = data;
+    this.getAlbumData();
+  },
+
+  methods: {
+    getAlbumData(){
+      axios.get(this.apiUrl).then((response)=>{
+      console.log(response);
+      if(this.isResponseOK(response)){
+        this.albums = response.data.response
       }
     })
   },
+  
+  isResponseOK({status}){
+    return status === 200
+  },
+  }, 
 
   components: {
     HeaderComponent,
