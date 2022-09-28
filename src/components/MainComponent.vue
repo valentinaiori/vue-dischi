@@ -1,31 +1,88 @@
 <template>
   <main>
-    <SelectAreaComponent/>
-    <div class="card-container">
-        <div class="card" v-for="album in albums" :key="album.title">
-            <div>
-                <img :src="album.poster">
-            </div>
-            <p class="album-title">{{album.title}}</p>
-            <p class="author">{{album.author}}</p>
-            <p class="year">{{album.year}}</p>
+    <SearchGenreComponent :options="genres" @selectedGenre="filterByGenre"/>
+    <div class="container-card">
+        <div class="card" v-for="album in albums" :key="album.title" >
+        <div>
+            <img :src="album.poster">
         </div>
+        <p class="album-title">{{album.title}}</p>
+        <p class="author">{{album.author}}</p>
+        <p class="year">{{album.year}}</p>
     </div>
-
+    </div>
   </main>
 </template>
 
 <script>
-    import SelectAreaComponent from './SelectAreaComponent.vue'
+import axios from 'axios';
+import SearchGenreComponent from './SearchGenreComponent.vue';
+
 
 export default {
     name: 'MainComponent',
-    props: {
-       albums: Array,
-    }, 
     components: {
-        SelectAreaComponent
-    }
+        SearchGenreComponent
+    },
+
+    data(){
+        return {
+            apiUrl: 'https://flynn.boolean.careers/exercises/api/array/music',
+            albums: [],
+            seletedGenre: '',
+       }
+    },
+    computed:{
+        genres(){
+            const array= [];
+            this.albums.forEach(album =>{
+                if(!array.includes(album.genre)){
+                    array.push(album.genre)
+                }
+            })
+            console.log({genres: array})
+            return array;
+        },
+        
+        albumToDisplay(){
+            console.log('ciao')
+            const array = [];
+            this.albums.forEach(album =>{
+                if(this.seletedGenre.length === 0 || this.selectedGenre === album.genre){
+                    array.push(album);
+                }
+            })
+            return array;
+        }
+
+    },
+    
+
+    created(){
+        this.getAlbumData();
+    },
+
+    methods: {
+        getAlbumData(){
+            axios.get(this.apiUrl).then((response)=>{
+                console.log(response);
+                console.log('gggggggggg');
+                if(this.isResponseOK(response)){
+                    console.log(response.data)
+                this.albums = response.data.response
+                }
+            })
+        },
+  
+        isResponseOK({status}){
+            return status === 200
+        },
+
+        filterByGenre(genre){
+            console.log('main received', genre);
+            this.selectedGenre = genre;
+        },
+    }, 
 }
 </script>
 
@@ -35,7 +92,7 @@ export default {
         color: white;
     }
 
-    .card-container{
+    .container-card{
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -44,11 +101,8 @@ export default {
         width: 1000px;
         text-align: center;
         height: 100%;
-        padding-top: 30px;
-        padding-bottom: 30px;
-        
-        
-    
+        padding-bottom: 26px;
+
         img{
             width: 130px;
             height: 140px;
@@ -80,8 +134,5 @@ export default {
             font-size: 0.8rem;
             padding-bottom: 10px;
         }
-    
     }
-
-
 </style>
